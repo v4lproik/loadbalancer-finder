@@ -26,13 +26,13 @@ import sys
     It makes few HTTP GET requests and look for different "Server" headers in them.
     @param nrequest: Number of request to extract HTTP 'server' header
 '''
-def analyzeServerBannerDiff(host, port, ssl, nrequests, useragent, timeout, progOptions):
+def analyzeServerBannerDiff(host, port, ssl, nrequests, useragent, timeout, progOptions, url=""):
     servers = []
     try:
         utils.printMessage("[*] Looking for banner inconsistencies", "info", progOptions)
         # Make x requests to get "server" header
         for x in range(0,nrequests):
-            header = utils.getHTTPHeader(host, port, ssl, "server", useragent, timeout, progOptions)
+            header = utils.getHTTPHeader(host, port, ssl, "server", useragent, timeout, progOptions, url)
             if header:
                 servers.append(header.rstrip())
         # A set is an unordered collection with no duplicate elements.

@@ -30,7 +30,7 @@ from datetime import datetime
     http://tools.ietf.org/html/rfc2616
     @param nrequest: Number of request to extract HTTP 'date' header
 '''        
-def analyzeHTTPTimestamp(host, port, ssl, nrequests, useragent, timeout, verbose, progOptions):
+def analyzeHTTPTimestamp(host, port, ssl, nrequests, useragent, timeout, verbose, progOptions, url=""):
     try:
         utils.printMessage("[*] Looking for HTTP timestamps inconsistencies", "info", progOptions)
         timestamps = []
@@ -40,7 +40,7 @@ def analyzeHTTPTimestamp(host, port, ssl, nrequests, useragent, timeout, verbose
         # Make x requests to detect inconsistencies
         for x in range(0,int(nrequests)):
             # Get only 'date' header
-            header = utils.getHTTPHeader(host, port, ssl, "date", useragent, timeout, progOptions)
+            header = utils.getHTTPHeader(host, port, ssl, "date", useragent, timeout, progOptions, url)
             if header:
                 timestamp = re.search("(.+ \d{0,2}:\d{0,2}:\d{0,2})", header).group(1)
                 # Convert date header to struct_time

@@ -1,6 +1,6 @@
 [packets]
 # Specifiy number of probes/packets sents
-ipid_syn = 1000
+ipid_syn = 100
 nicmp_packets = 50
 tcp_timestamp = 50
 banner_retrieves = 5

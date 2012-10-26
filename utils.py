@@ -120,7 +120,7 @@ def printMessage(message, type, options):
 '''
     Function used to get just one HTTP header
 '''
-def getHTTPHeader(host, port, ssl, header, useragent, http_timeout, progOptions):
+def getHTTPHeader(host, port, ssl, header, useragent, http_timeout, progOptions, url):
     try:
         headers = {'User-agent': useragent,
                    'Host': host,
@@ -130,11 +130,12 @@ def getHTTPHeader(host, port, ssl, header, useragent, http_timeout, progOptions)
                    }
         if not ssl:
             conn = httplib.HTTPConnection(host, port, timeout=http_timeout)
-            conn.request("GET", "http://%s/" %host , headers=headers)
+            conn.request("GET", "http://%s%s" %(host, url), headers=headers)
         else:
             conn = httplib.HTTPSConnection(host, port, timeout=http_timeout)
-            conn.request("GET", "https://%s/" % host, headers=headers)
+            conn.request("GET", "https://%s%s" %(host, url), headers=headers)
         response = conn.getresponse()
+        print host+url+": ",response.getheaders()
         return response.getheader(header)
     except KeyboardInterrupt:
         printMessage("[!] Aborted by user...", "error", progOptions)

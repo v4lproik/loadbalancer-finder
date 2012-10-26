@@ -81,46 +81,48 @@ def checkArgs():
 
 
 if __name__ == '__main__':
-    
+
     banner()
-    
-    
+
+
     parser = argparse.ArgumentParser()
     gr1 = parser.add_argument_group("Main options")
     gr1.add_argument('-d', '--domain', dest='domain', required=False, help='domain to check')
+    gr1.add_argument('-U', '--url', dest='url', required=False, help='URL used for HTTP checks')
     gr1.add_argument('-p', '--port', dest='port', required=False, default=80, type=int, help='port to check (default 80)')
     gr1.add_argument('-s', '--ssl', dest='ssl', default=False,  action='store_true', help='use SSL to HTTP request')
     gr1.add_argument('-f', '--file', dest='configfile', default="lb-finder.conf",  help='config file to use')
-    
+
+
     gr2 = parser.add_argument_group("Disply options")
     gr2.add_argument('-v', '--verbose', dest='verbose', default=False,  action='store_true', help='show extra info about IPIDs, timpestamps, etc')
     gr2.add_argument('-c', '--colours', dest='colour', default=False,  action='store_true', help='coloured output')
-    
+
     gr3 = parser.add_argument_group("Update options")
     gr3.add_argument('-u','--update', dest='update', action='store_true', help='update Load Balancer Finder')
-    
+
     checkArgs()
-    
+
     args = parser.parse_args()
-          
+
     progOptions = utils.cParams()
     progOptions.set_normal_output(sys.stdout)
     progOptions.set_error_output(sys.stderr)
     progOptions.set_use_colours(args.colour)
     progOptions.verbose = args.verbose
-    
-    
+
+
     if args.update:
         utils.printMessage("[*] Going to update Load Balancer Finder", "info", progOptions)
         updater.update()
         sys.exit(1)
-    
-    
+
+
     if not os.geteuid()==0:
         utils.printMessage("[-] You have to be root (scapy packet injection)", "error", progOptions)
         sys.exit(0)
-    
-    
+
+
     # Configuration parsing
     cfg = ConfigParser.ConfigParser()
     try:
@@ -138,24 +140,27 @@ if __name__ == '__main__':
         f5enumeration = cfg.get("HTTP", "f5enumeration")
     except:
         utils.printMessage("[-] Error parsing config options (check lb-finder.conf for reference)", "error", progOptions)
-        sys.exit(0) 
+        sys.exit(0)
 
-    
+
     # Battery tests
     dns_servers_round_robin = utils.readDNSServers("dnsservers.txt", progOptions)
-    
+
     domain = args.domain
     host = domain
     port = args.port
+    url = args.url
+    if url:
+        url = url.rstrip()
     domain = domain.rstrip()
     verbose = args.verbose
     utils.printMessage("[*] Looking for load balancers in %s\n" %domain, "info", progOptions)
     methods.checkMultipleDNS(domain, progOptions)
     methods.analyzeIPID(domain, port, nsyn, socket_timeout, verbose, progOptions)
     methods.checkTTLF5(host, port, domain, socket_timeout, progOptions)
-    methods.analyzeServerBannerDiff(host, port, args.ssl, banner_retrieves, useragent, http_timeout, progOptions)
-    methods.checkLBCookie(host, port, args.ssl, useragent, http_timeout, f5enumeration, progOptions)
-    methods.analyzeHTTPTimestamp(host, port, args.ssl, httptimestamp_retrieves, useragent, http_timeout, verbose, progOptions)
+    methods.analyzeServerBannerDiff(host, port, args.ssl, banner_retrieves, useragent, http_timeout, progOptions, url)
+    methods.checkLBCookie(host, port, args.ssl, useragent, http_timeout, f5enumeration, progOptions, url)
+    methods.analyzeHTTPTimestamp(host, port, args.ssl, httptimestamp_retrieves, useragent, http_timeout, verbose, progOptions, url)
     methods.checkICMPTimestamp(host, socket_timeout, nicmp_packets, args.verbose, progOptions)
     methods.checkTCPTimestamp(host, port, tcp_timestamp, socket_timeout, args.verbose, progOptions)
     methods.analyzeDNSRoundRobin(domain, dns_queries, dns_servers_round_robin, progOptions)

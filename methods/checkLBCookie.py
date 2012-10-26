@@ -29,12 +29,12 @@ import utils
     It makes one HTTP GET request and look for a series of well-known load balancer cookies
     @param f5enumeration: Number of HTTP requests to get cookies and enumerate internal IP:port pair
 '''
-def checkLBCookie(host, port, ssl, useragent, timeout, f5enumeration, progOptions):
+def checkLBCookie(host, port, ssl, useragent, timeout, f5enumeration, progOptions, url=""):
     f5 = 0
     lbdetected = ""
     try:
         utils.printMessage("[*] Looking for known load balancers cookies", "info", progOptions)
-        cookie = utils.getHTTPHeader(host, port, ssl, "set-cookie", useragent, timeout, progOptions)
+        cookie = utils.getHTTPHeader(host, port, ssl, "set-cookie", useragent, timeout, progOptions, url)
         if cookie:
             # Lookup for some known cookies - Send me yours!
             if re.search("BIGipServer", cookie) or re.search('\d{8,10}\.\d{1,5}\.\d{4}', cookie):
