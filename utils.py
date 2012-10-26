@@ -135,7 +135,6 @@ def getHTTPHeader(host, port, ssl, header, useragent, http_timeout, progOptions,
             conn = httplib.HTTPSConnection(host, port, timeout=http_timeout)
             conn.request("GET", "https://%s%s" %(host, url), headers=headers)
         response = conn.getresponse()
-        print host+url+": ",response.getheaders()
         return response.getheader(header)
     except KeyboardInterrupt:
         printMessage("[!] Aborted by user...", "error", progOptions)
