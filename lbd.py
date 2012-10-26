@@ -46,7 +46,6 @@ import ConfigParser
 import argparse
 import utils
 import methods
-import updater
 import os
 
 
@@ -88,7 +87,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     gr1 = parser.add_argument_group("Main options")
     gr1.add_argument('-d', '--domain', dest='domain', required=False, help='domain to check')
-    gr1.add_argument('-U', '--url', dest='url', required=False, help='URL used for HTTP checks')
+    gr1.add_argument('-u', '--url', dest='url', required=False, help='URL used for HTTP checks')
     gr1.add_argument('-p', '--port', dest='port', required=False, default=80, type=int, help='port to check (default 80)')
     gr1.add_argument('-s', '--ssl', dest='ssl', default=False,  action='store_true', help='use SSL to HTTP request')
     gr1.add_argument('-f', '--file', dest='configfile', default="lb-finder.conf",  help='config file to use')
@@ -98,8 +97,6 @@ if __name__ == '__main__':
     gr2.add_argument('-v', '--verbose', dest='verbose', default=False,  action='store_true', help='show extra info about IPIDs, timpestamps, etc')
     gr2.add_argument('-c', '--colours', dest='colour', default=False,  action='store_true', help='coloured output')
 
-    gr3 = parser.add_argument_group("Update options")
-    gr3.add_argument('-u','--update', dest='update', action='store_true', help='update Load Balancer Finder')
 
     checkArgs()
 
@@ -110,13 +107,6 @@ if __name__ == '__main__':
     progOptions.set_error_output(sys.stderr)
     progOptions.set_use_colours(args.colour)
     progOptions.verbose = args.verbose
-
-
-    if args.update:
-        utils.printMessage("[*] Going to update Load Balancer Finder", "info", progOptions)
-        updater.update()
-        sys.exit(1)
-
 
     if not os.geteuid()==0:
         utils.printMessage("[-] You have to be root (scapy packet injection)", "error", progOptions)
