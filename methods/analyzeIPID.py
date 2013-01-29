@@ -81,10 +81,10 @@ def analyzeIPID(domain, port, nsyn, timeout, verbose, progOptions):
             # Plot IPID in some axis (maybe useful for some reports)
             g = pyx.graph.graphxy(width=15,height=10)
             g.plot(pyx.graph.data.points(zip(range(0,nsyn), ipids), x=1, y=2))
-            print domain
+            #rint domain
             fname = domain+"_ipids.jpg"
-            g.pipeGS(device="jpeg")
-            print "test"
+            g.pipeGS(fname, device="jpeg")
+            #print "test"
             utils.printMessage("   [+] Generated %s file with plotted IPIDS" % fname, "info", progOptions)
             if verbose:
                 utils.printMessage("   [v] IPIDs received: %s" %str(ipids), "verbose", progOptions)

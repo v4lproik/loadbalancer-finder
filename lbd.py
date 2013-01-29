@@ -93,7 +93,7 @@ if __name__ == '__main__':
     gr1.add_argument('-f', '--file', dest='configfile', default="lb-finder.conf",  help='config file to use')
 
 
-    gr2 = parser.add_argument_group("Disply options")
+    gr2 = parser.add_argument_group("Display options")
     gr2.add_argument('-v', '--verbose', dest='verbose', default=False,  action='store_true', help='show extra info about IPIDs, timpestamps, etc')
     gr2.add_argument('-c', '--colours', dest='colour', default=False,  action='store_true', help='coloured output')
 

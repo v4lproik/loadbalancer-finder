@@ -120,7 +120,7 @@ def printMessage(message, type, options):
 '''
     Function used to get just one HTTP header
 '''
-def getHTTPHeader(host, port, ssl, header, useragent, http_timeout, progOptions, url):
+def getHTTPHeader(host, port, ssl, header, useragent, http_timeout, progOptions, url=""):
     try:
         headers = {'User-agent': useragent,
                    'Host': host,
